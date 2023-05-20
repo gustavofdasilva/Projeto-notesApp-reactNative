@@ -18,52 +18,68 @@ export default function App() {
   return (
     <View style={styles.main}>
       <FlatList
-      style={{alignSelf:'center'}}
+        showsVerticalScrollIndicator={false}
+        style={{alignSelf:'center'}}
         data={notes}
         renderItem={({item}) => (
-          <View style={[styles.note,{backgroundColor: item.editable ? '#D0d000' : '#000'}]}>
+          <View style={styles.note}>
             <View style={{
               display: 'flex',
               justifyContent: "space-between",
               alignItems: 'center',
               flexDirection: 'row',
-              margin: 8,
+              padding: 8,
+              backgroundColor:'#3d3d3d',
+              borderTopLeftRadius: 8,
+              borderTopRightRadius: 8,
             }}>
+                {/*note Title*/}
                 <TextInput 
-                  style={[styles.noteText]}
-                  editable={item.editable}>{item.title}</TextInput>
-                <TouchableOpacity
-                  onPress={()=>{
-                    item.editable = !item.editable
-                    setRerender(true)
-                    setRerender(false)
-                    console.log(item.editable + item.title)                   
-                  }}
-                  style={{width:30, height:30}}>
-                  <Image
-                    source={require('./assets/edit.png')}
-                    tintColor={'#fff'}
-                    style={{width:'100%', height:'100%'}}
-                    />
-                </TouchableOpacity>
+                  style={[styles.noteTitle]}
+                  editable={false}>
+                    {item.title}
+                </TextInput>
+
+                {/*Buttons view*/}
+                <View style={{
+                  display: 'flex',
+                  flexDirection: 'row'
+                }}>
+                  {/*edit note button*/}
+                  <TouchableOpacity
+                    onPress={()=>{
+                      /*edit note function*/    
+                      console.log('edit note');        
+                    }}
+                    style={styles.noteButton}>
+                    <Image
+                      source={require('./assets/edit.png')}
+                      tintColor={'#fff'}
+                      style={styles.noteIcon}
+                      />
+                  </TouchableOpacity>
+
+                  {/*delete note button*/}
+                  <TouchableOpacity
+                    style={styles.noteButton}
+                    onPress={()=>{
+                      //delete note button
+                      console.log('Delete note')
+                    }}>
+                    <Image
+                      source={require('./assets/trash-2.png')}
+                      tintColor={'#fff'}
+                      style={styles.noteIcon}/>
+                  </TouchableOpacity>
+                </View>
             </View>
-            <View style={{
-              display: 'flex',
-              justifyContent: "space-between",
-              alignItems: 'center',
-              flexDirection: 'row',
-              margin: 8,
-            }}>
-              <TextInput
-                multiline={true}>
-                Here comes the body of the note
-              </TextInput>
-              <TouchableOpacity>
-                  <Image
-                    source={require('./assets/trash-2.png')}
-                    tintColor={'#fff'}/>
-              </TouchableOpacity>
-            </View>
+
+            {/*note description*/}
+            <TextInput
+                  multiline={true}
+                  style={styles.noteBody}>
+                  Here comes the body of the note
+            </TextInput>
            </View>
         )}
         />
@@ -86,7 +102,8 @@ export default function App() {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    backgroundColor: '#1d1d1d'
+    backgroundColor: '#1d1d1d',
+    padding: 20,
   },
 
   addButton: {
@@ -103,18 +120,44 @@ const styles = StyleSheet.create({
   },
 
   note: {
-    width: 250,
-    height: 250,
+    width: 300,
+    height: 300,
     backgroundColor: '#2d2d2d',
     textAlign: 'justify',
     margin: 8,
     borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+
+    elevation: 7,
   },
 
-    noteText: {
+    noteTitle: {
       color: '#fdfdfd',
       margin: 8,
       fontSize: 20,
-      
+    },
+
+    noteBody: {
+      color: '#fdfdfd',
+      margin: 8,
+      fontSize: 15,
+      lineHeight: 30,
+    },
+
+    noteIcon: {
+      width: '100%',
+      height: '100%',
+    },
+
+    noteButton: {
+      width: 35,
+      height: 35,
+      marginLeft: 8
     }
 });
