@@ -8,9 +8,10 @@ Decidir paleta de cores
 */ 
 
 
-export default function App() {
+export default function App() { 
+  
   const notesData = [
-    {title: 'Test', text: 'I need to remember to do that', editable: true}
+    {title: 'Test', text: 'I need to remember to do that', editable: false}
   ]
 
   const [notes, setNotes] = useState(notesData)
@@ -21,22 +22,24 @@ export default function App() {
         showsVerticalScrollIndicator={false}
         style={{alignSelf:'center'}}
         data={notes}
-        renderItem={({item}) => (
-          <View style={styles.note}>
+        extraData={this.state}
+        renderItem={({item, index}) => (
+          <View style={[styles.note,{backgroundColor:item.editable ? '#5a5a5a': '#303030',}]}>
             <View style={{
               display: 'flex',
               justifyContent: "space-between",
               alignItems: 'center',
               flexDirection: 'row',
               padding: 8,
-              backgroundColor:'#3d3d3d',
+              backgroundColor:item.editable ? '#5a5a5a': '#3d3d3d',
               borderTopLeftRadius: 8,
               borderTopRightRadius: 8,
             }}>
                 {/*note Title*/}
                 <TextInput 
                   style={[styles.noteTitle]}
-                  editable={false}>
+                  editable={item.editable}
+                  cursorColor={'#F0d'}>
                     {item.title}
                 </TextInput>
 
@@ -49,12 +52,19 @@ export default function App() {
                   <TouchableOpacity
                     onPress={()=>{
                       /*edit note function*/    
-                      console.log('edit note');        
+                      let arr = [...notes]
+                      arr[index] = {
+                        title: notes[index].title,
+                        text: notes[index].text,
+                        editable: !notes[index].editable,
+                      }
+                      setNotes(arr)
+                      console.log('edit note', item.editable, index);        
                     }}
                     style={styles.noteButton}>
                     <Image
                       source={require('./assets/edit.png')}
-                      tintColor={'#fff'}
+                      tintColor={item.editable?'#F0d':'#fff'}
                       style={styles.noteIcon}
                       />
                   </TouchableOpacity>
@@ -63,7 +73,9 @@ export default function App() {
                   <TouchableOpacity
                     style={styles.noteButton}
                     onPress={()=>{
-                      //delete note button
+                      let arr = [...notes]
+                      arr.splice(index,1)
+                      setNotes(arr)
                       console.log('Delete note')
                     }}>
                     <Image
@@ -77,8 +89,10 @@ export default function App() {
             {/*note description*/}
             <TextInput
                   multiline={true}
-                  style={styles.noteBody}>
-                  Here comes the body of the note
+                  style={styles.noteBody}
+                  editable={item.editable}
+                  cursorColor={'#F0d'}>
+                  {item.text}
             </TextInput>
            </View>
         )}
@@ -86,7 +100,7 @@ export default function App() {
       <TouchableOpacity
         style={styles.addButton}
           onPress={() => {
-            var arr = [...notes, {title: 'Hello!', text: 'I also need to remember that'}]
+            var arr = [...notes, {title: 'Hello!', text: 'I also need to remember that', editable: false}]
             setNotes(arr)
           }}
         >
